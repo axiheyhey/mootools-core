@@ -126,3 +126,33 @@ if (Object.create == Function.prototype.create) Object.create = null;
 var $try = Function.attempt;
 
 //</1.2compat>
+
+Function.implement({
+
+  'throttle' : function(delay, bind) {
+    var timer = NaN, func = this;
+    return function() {
+      clearTimeout(timer);
+      timer = func.delay(delay, bind, arguments);
+    };
+  },
+
+  'before' : function(func) {
+    var self = this;
+    return function() {
+      func.apply(this, arguments);
+      return self.apply(this, arguments);
+    };
+  },
+
+  'after' : function(func) {
+    var self = this;
+    return function() {
+      var ret = self.apply(this, arguments);
+      func.apply(this, arguments);
+      return ret;
+    };
+  }
+
+});
+
